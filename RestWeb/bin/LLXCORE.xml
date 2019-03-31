@@ -1,0 +1,3554 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LLXCORE</name>
+    </assembly>
+    <members>
+        <member name="T:LLXCORE.DataPool.Data">
+            <summary>
+            This class contains a data manager, allowing to create, modify, erase and manage 
+            several sources of datas, and their contents.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.ToString">
+            <summary>
+            Returns the name of this class.
+            </summary>
+            <returns>
+            The name of this class.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ToString">
+            <summary>
+            Returns the name of this class.
+            </summary>
+            <returns>
+            The name of this class.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.DataPool.Data._Sources">
+            <summary>
+            The sources of data.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.#ctor">
+            <summary>
+            Instances a new data manager, allowing to create, modify, erase and manage 
+            several sources of datas, and their contents.
+            <para/>
+            NOTE: This class is not thread safe. If two different threads modifies 
+            this object at same time, unexpected and/or unhandled errors may occur.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.SourceGather">
+            <summary>
+            Searches and retrieves the name and priority of all current sources.
+            The result will be null if this object contains no sources, or will be 
+            a bidimensional object array made of two columns, first column containing 
+            the name of the source as a string, and second column containing the 
+            priority of the source as an int.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.SourceCreate(System.String,System.Int32)">
+            <summary>
+            Creates a new source of data.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="SourcePriority">
+            The priority of the source. (Must be 0 through 255).
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0000 - Error validating source name.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.SourceUpdate(System.String,System.String)">
+            <summary>
+            Updates an existing source of data by setting a new name into it.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="SourceNewName">
+            The new name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0001 - Error updating source.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.SourceUpdate(System.String,System.Int32)">
+            <summary>
+            Updates an existing source of data by setting a new priority into it.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="SourceNewPriority">
+            The new priority of the source. (Must be 0 through 255).
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0001 - Error updating source.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.SourceClear(System.String)">
+            <summary>
+            Clears the content of an existing source of data and mantains its name and priority.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0002 - Error clearing the source.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.SourceDelete(System.String)">
+            <summary>
+            Deletes an existing source of data.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0003 - Error deleting source.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataGather(System.String)">
+            <summary>
+            Searches and retrieves the data within a source. The result will be null 
+            if the source contains no data, or will be a bidimensional object array 
+            made of two columns, first column containing the entry identifier as a string,
+            and second column containing the data as an object.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <returns>
+            A bidimensional object array containing the data. null if source contains no data.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0004 - Error gathering data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataSelect(System.String,System.String)">
+            <summary>
+            Searches and retrieves the data of an entry within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <returns>
+            The data object of the entry.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0005 - Error selecting data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataSelect(System.String)">
+            <summary>
+            Searches and retrieves the data of an entry within all sources.
+            <para/>
+            WARNING: This method may impact significatively the performance of the software.
+            <para/>
+            This method will consider the source priority in order to retrieve a result, 
+            and will retrieve the data of the source with the highest priority.
+            If two sources with the same priority and the same identifier are present, 
+            the order of creation will be considered too, retrieving the most recently created.
+            </summary>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <returns>
+            The data object of the entry. null if no identifier was found in any source.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0005 - Error selecting data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataSelect(System.String,System.Int32,System.Int32)">
+            <summary>
+            Searches and retrieves the data of an entry within one or more sources.
+            <para/>
+            WARNING: This method may impact significatively the performance of the software.
+            <para/>
+            This method will consider the source priority in order to retrieve a result, 
+            and will retrieve the data of the source with the highest priority.
+            If two sources with the same priority and the same identifier are present, 
+            the order of creation will be considered too, retrieving the most recently created.
+            </summary>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="LowestPriority">
+            The starting priority of the search.
+            </param>
+            <param name="HighestPriority">
+             The ending priority of the search.
+             </param>
+            <returns>
+            The data object of the entry. null if no identifier was found in any source, 
+            or any source was present between target priorities.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0005 - Error selecting data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataSelect(System.String,System.Int32)">
+            <summary>
+            Searches and retrieves the data of an entry within one or more sources.
+            <para/>
+            WARNING: This method may impact significatively the performance of the software.
+            <para/>
+            This method will consider the source priority in order to retrieve a result.
+            If two sources with the same priority and the same identifier are present, 
+            the order of creation will be considered too, retrieving the most recently created.
+            </summary>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="SpecificPriority">
+            The priority of the search.
+            </param>
+            <returns>
+            The data object of the entry. null if no identifier was found in any source, 
+            or any source was present in target priority.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0005 - Error selecting data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataInsert(System.String,System.String,System.Object)">
+            <summary>
+            Inserts a new entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="Data">
+            The data object of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0006 - Error inserting data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataUpdate(System.String,System.String,System.String)">
+            <summary>
+            Searches and changes the identifier of an entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="NewId">
+            The new identifier of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0007 - Error updating data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataUpdate(System.String,System.String,System.Object)">
+            <summary>
+            Searches and changes the data of an entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="NewData">
+            The new data object of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0007 - Error updating data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data.DataDelete(System.String,System.String)">
+            <summary>
+            Searches and delete an entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0008 - Error deleting data.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ValidateSourceName(System.String)">
+            <summary>
+            Validates a string to be not null, not empty and/or does not contain only
+            blank spaces.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0009 - Source name is null.
+            <para/>
+            0x0010 - Source name is empty.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ValidateSourceNameExists(System.String)">
+            <summary>
+            Validates a string to be the name of any existing source of data.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ValidateSourceNameDontExists(System.String)">
+            <summary>
+            Validates a string to not be the name of any existing source of data.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0012 - Source name is already in use.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ValidateSourcePriority(System.Int32)">
+            <summary>
+            Validates a number to be a valid source's priority value.
+            </summary>
+            <param name="SourcePriority">
+            The priority of the source. (Must be 0 through 255).
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0013 - Source priority must be 0 or higher.
+            <para/>
+            0x0014 - Source priority must be 255 or smaller.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ValidateDataId(System.String)">
+            <summary>
+            Validates a string to be not null, not empty and/or does not contain only blank spaces.
+            </summary>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0015 - Id is null.
+            <para/>
+            0x0016 - Id is empty.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ValidateDataIdExists(System.String,System.String)">
+            <summary>
+            Validates a string to be an existing id of an entry within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0017 - Id wasn't found.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._ValidateDataIdDontExists(System.String,System.String)">
+            <summary>
+            Validates a string to not be an existing id of an entry within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0018 - Id is already in use.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._SourceGather">
+            <summary>
+            Searches and retrieves the name and priority of all current sources.
+            The result will be null if this object contains no sources, or will be 
+            a bidimensional object array made of two columns, first column containing 
+            the name of the source as a string, and second column containing the 
+            priority of the source as an int.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._SourceCreate(System.String,System.Int32)">
+            <summary>
+            Creates a new source of data.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="SourcePriority">
+            The priority of the source. (Must be 0 through 255).
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0020 - Error validating source priority.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._SourceUpdate(System.String,System.String)">
+            <summary>
+            Updates an existing source of data by setting a new name into it.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="SourceNewName">
+            The new name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0021 - Error validating source new name.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._SourceUpdate(System.String,System.Int32)">
+            <summary>
+            Updates an existing source of data by setting a new priority into it.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="SourceNewPriority">
+            The new priority of the source. (Must be 0 through 255).
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0020 - Error validating source priority.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._SourceClear(System.String)">
+            <summary>
+            Clears the content of an existing source of data and mantains its name and priority.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._SourceDelete(System.String)">
+            <summary>
+            Deletes an existing source of data.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0022 - Error deleting source.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataGather(System.String)">
+            <summary>
+            Searches and retrieves the data within a source. The result will be null 
+            if the source contains no data, or will be a bidimensional object array 
+            made of two columns, first column containing the entry identifier as a string,
+            and second column containing the data as an object.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <returns>
+            A bidimensional object array containing the data. null if source contains no data.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataSelect(System.String,System.String)">
+            <summary>
+            Searches and retrieves the data of an entry within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <returns>
+            The data object of the entry.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0017 - Id wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0023 - Error validating id.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataSelect(System.String)">
+            <summary>
+            Searches and retrieves the data of an entry within all sources.
+            <para/>
+            WARNING: This method may impact significatively the performance of the software.
+            <para/>
+            This method will consider the source priority in order to retrieve a result, 
+            and will retrieve the data of the source with the highest priority.
+            If two sources with the same priority and the same identifier are present, 
+            the order of creation will be considered too, retrieving the most recently created.
+            </summary>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <returns>
+            The data object of the entry. null if no identifier was found in any source.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0023 - Error validating id.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataSelect(System.String,System.Int32,System.Int32)">
+            <summary>
+            Searches and retrieves the data of an entry within one or more sources.
+            <para/>
+            WARNING: This method may impact significatively the performance of the software.
+            <para/>
+            This method will consider the source priority in order to retrieve a result, 
+            and will retrieve the data of the source with the highest priority.
+            If two sources with the same priority and the same identifier are present, 
+            the order of creation will be considered too, retrieving the most recently created.
+            </summary>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="LowestPriority">
+            The starting priority of the search.
+            </param>
+            <param name="HighestPriority">
+             The ending priority of the search.
+             </param>
+            <returns>
+            The data object of the entry. null if no identifier was found in any source, 
+            or any source was present between target priorities.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0020 - Error validating source priority.
+            <para/>
+            0x0023 - Error validating id.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataSelect(System.String,System.Int32)">
+            <summary>
+            Searches and retrieves the data of an entry within one or more sources.
+            <para/>
+            WARNING: This method may impact significatively the performance of the software.
+            <para/>
+            This method will consider the source priority in order to retrieve a result.
+            If two sources with the same priority and the same identifier are present, 
+            the order of creation will be considered too, retrieving the most recently created.
+            </summary>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="SpecificPriority">
+            The priority of the search.
+            </param>
+            <returns>
+            The data object of the entry. null if no identifier was found in any source, 
+            or any source was present in target priority.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0020 - Error validating source priority.
+            <para/>
+            0x0023 - Error validating id.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataInsert(System.String,System.String,System.Object)">
+            <summary>
+            Inserts a new entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="Data">
+            The data object of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0023 - Error validating id.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataUpdate(System.String,System.String,System.String)">
+            <summary>
+            Searches and changes the identifier of an entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="NewId">
+            The new identifier of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0017 - Id wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0023 - Error validating id.
+            <para/>
+            0x0024 - Error validating new id.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataUpdate(System.String,System.String,System.Object)">
+            <summary>
+            Searches and changes the data of an entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <param name="NewData">
+            The new data object of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0017 - Id wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0023 - Error validating id.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.DataPool.Data._DataDelete(System.String,System.String)">
+            <summary>
+            Searches and delete an entry of data within a source.
+            </summary>
+            <param name="SourceName">
+            The name of the source.
+            </param>
+            <param name="Id">
+            The identifier of the entry.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0011 - Source name wasn't found.
+            <para/>
+            0x0017 - Id wasn't found.
+            <para/>
+            0x0019 - Error validating source name.
+            <para/>
+            0x0023 - Error validating id.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.DataPool.List">
+            <summary>
+            This class is prepared to be used as a list by a superior class.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.DataPool.List._Id">
+            <summary>
+            The identifier of the entry.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.DataPool.List.Id">
+            <summary>
+            Gets or sets the identifier stored in the list entry.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.DataPool.List._Data">
+            <summary>
+            The data of the entry.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.DataPool.List.Data">
+            <summary>
+            Gets or sets the data stored in the list entry.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.DataPool.List.#ctor(System.String,System.Object)">
+            <summary>
+            Instances a new list entry.
+            </summary>
+            <param name="Id">
+             The identifier of the entry.
+             </param>
+            <param name="Data">
+            The data of the entry.
+            </param>
+        </member>
+        <member name="T:LLXCORE.DataPool.Source">
+            <summary>
+            This class is prepared to be used as a source manager by a superior class,
+            allowing to store a list header along with a list object.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.DataPool.Source._Name">
+            <summary>
+            The name of the source.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.DataPool.Source.Name">
+            <summary>
+            Gets or sets the name of the source.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.DataPool.Source._Priority">
+            <summary>
+            The priority of the source.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.DataPool.Source.Priority">
+            <summary>
+            Gets or sets the priority of the source.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.DataPool.Source._DataList">
+            <summary>
+            The data list of the source.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.DataPool.Source.DataList">
+            <summary>
+            Gets the data list of the source.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.DataPool.Source.#ctor(System.String,System.Int32)">
+            <summary>
+            Instances a new source object.
+            </summary>
+            <param name="Name">
+            The name of the source.
+            </param>
+            <param name="Priority">
+            The priority of the source.
+            </param>
+        </member>
+        <member name="T:LLXCORE.Failure">
+            <summary>
+            This class contains the default exception to be used on this software.
+            If this failure must be caugth, please refeer to Print method for further details.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Failure.ToString">
+            <summary>
+            Returns the message of this failure.
+            </summary>
+            <returns>
+            The message.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure._ToString">
+            <summary>
+            Returns the message of this failure.
+            </summary>
+            <returns>
+            The message.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Failure._Message">
+            <summary>
+            The message of the failure.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.Message">
+            <summary>
+            Gets the message of this failure.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._ErrorCode">
+            <summary>
+            The error code of the failure.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.ErrorCode">
+            <summary>
+            Gets the error code of this failure.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._ErrorLevel">
+            <summary>
+            The error level of the failure.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.ErrorLevel">
+            <summary>
+            Gets the error level of this failure.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._Module">
+            <summary>
+            The module where the failure was produced.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.Module">
+            <summary>
+            Gets the module name where this failure was produced.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._ClassName">
+            <summary>
+            The class name where the failure was produced.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.ClassName">
+            <summary>
+            Returns the class name within the module where this failure was produced.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._Method">
+            <summary>
+            The method where the failure was produced.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.Method">
+            <summary>
+            Returns the method name within the class where this failure was produced.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._InnerFailure">
+            <summary>
+            The inner failure.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.InnerFailure">
+            <summary>
+            Returns the inner exception and its information, if available.
+            Inner Failure may be null.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._InnerNative">
+            <summary>
+            The inner native exception.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Failure.InnerNative">
+            <summary>
+            Returns the inner native exception and its information, if available.
+            InnerNative exception may be null.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Failure._Result">
+            <summary>
+            The resultant string array to be returned by an handler method.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Failure.#ctor(System.String,System.String,System.Int32,System.Reflection.MethodBase,LLXCORE.Failure)">
+            <summary>
+            Creates a new throwable exception called failure to be used on this software.
+            </summary>
+            <param name="Message">
+            The message of the failure.
+            </param>
+            <param name="ErrorCode">
+            The error code of the failure.
+            </param>
+            <param name="ErrorLevel">
+            The error level of the failure.
+            </param>
+            <param name="Module">
+            The module where the failure was produced.
+            </param>
+            <param name="ClassName">
+            The class name where the failure was produced.
+            </param>
+            <param name="Method">
+            The method where the failure was produced.
+            </param>
+            <param name="InnerFailure">
+            The inner failure.
+            </param>
+        </member>
+        <member name="M:LLXCORE.Failure.#ctor(System.String,System.String,System.Int32,System.Reflection.MethodBase,System.Exception)">
+            <summary>
+            Creates a new throwable exception called failure to be used on this software.
+            </summary>
+            <param name="Message">
+            The message of the failure.
+            </param>
+            <param name="ErrorCode">
+            The error code of the failure.
+            </param>
+            <param name="ErrorLevel">
+            The error level of the failure.
+            </param>
+            <param name="Module">
+            The module where the failure was produced.
+            </param>
+            <param name="ClassName">
+            The class name where the failure was produced.
+            </param>
+            <param name="Method">
+            The method where the failure was produced.
+            </param>
+            <param name="InnerNative">
+            The inner native exception.
+            </param>
+        </member>
+        <member name="M:LLXCORE.Failure.GetInnerestNative">
+            <summary>
+            Gets the most inner native exception that may, or may not, be the origin of this failure.
+            Null will be returned, either if, no native exception was thrown, or native exception doesn't exists.
+            </summary>
+            <returns>
+            The most inner native exception, if any.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure.Handle">
+            <summary>
+            Handles a failure by gathering its information and prepares a string
+            array containing all the information of the failure and its inner(s)
+            failure(s) if any.
+            </summary>
+            <returns>
+            A string array containing all the failure information.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure.Handle(System.String[])">
+            <summary>
+            Handles a failure by gathering its information and prepares a string array 
+            containing all the information of the failure and its inner(s) failure(s) if any.
+            <para/>
+            Extra information may be provided by the user to be inserted on the
+            resulting array.
+            </summary>
+            <param name="ExtraInformation">
+            The extra information to add (if desired).
+            </param>
+            <returns>
+            A string array containing all the failure information.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure.Print">
+            <summary>
+            Handles a failure by gathering its information and prints in console all
+            the information of the failure and its inner(s) failure(s) if any.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Failure.Print(System.String[])">
+            <summary>
+            Handles a failure by gathering its information and prints in console all
+            the information of the failure and its inner(s) failure(s) if any.
+            <para/>
+            Extra information may be provided by the user to be printed in console.
+            </summary>
+            <param name="ExtraInformation">
+            The extra information to print (if desired).
+            </param>
+        </member>
+        <member name="M:LLXCORE.Failure._GetInnerestNative">
+            <summary>
+            Gets the most inner native exception that may, or may not, be the origin of this failure.
+            Null will be returned, either if, no native exception was thrown, or native exception doesn't exists.
+            </summary>
+            <returns>
+            The most inner native exception, if any.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure._Handle">
+            <summary>
+            Handles a failure by gathering its information and prepares a string
+            array containing all the information of the failure and its inner(s)
+            failure(s) if any.
+            </summary>
+            <returns>
+            A string array containing all the failure information.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure._Handle(System.String[])">
+            <summary>
+            Handles a failure by gathering its information and prepares a string array 
+            containing all the information of the failure and its inner(s) failure(s) if any.
+            <para/>
+            Extra information may be provided by the user to be inserted on the
+            resulting array.
+            </summary>
+            <param name="ExtraInformation">
+            The extra information to add (if desired).
+            </param>
+            <returns>
+            A string array containing all the failure information.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure._Print">
+            <summary>
+            Handles a failure by gathering its information and prints in console all
+            the information of the failure and its inner(s) failure(s) if any.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Failure._Print(System.String[])">
+            <summary>
+            Handles a failure by gathering its information and prints in console all
+            the information of the failure and its inner(s) failure(s) if any.
+            <para/>
+            Extra information may be provided by the user to be printed in console.
+            </summary>
+            <param name="ExtraInformation">
+            The extra information to print (if desired).
+            </param>
+        </member>
+        <member name="M:LLXCORE.Failure._Header">
+            <summary>
+            Inserts the header of the resulting string array.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Failure._Extra(System.String[])">
+            <summary>
+            Inserts the extra information provided by the user, if any, in the
+            resulting string array.
+            </summary>
+            <param name="ExtraInformation">
+            The extra information to add (if desired).
+            </param>
+        </member>
+        <member name="M:LLXCORE.Failure._Body">
+            <summary>
+            Inserts the body information in the resulting string array.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Failure._ResultAdd(System.String)">
+            <summary>
+            Adds a new line of information to the array.
+            </summary>
+            <param name="Content">
+            The information to add.
+            </param>
+        </member>
+        <member name="M:LLXCORE.Failure._GetMethod(System.Reflection.MethodBase)">
+            <summary>
+            Gets the caller's method name.
+            </summary>
+            <param name="CurrentMethod">
+            The caller method.
+            </param>
+            <returns>
+            The caller's method name.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure._GetClassName(System.Reflection.MethodBase)">
+            <summary>
+            Gets the caller's class name.
+            </summary>
+            <param name="CurrentMethod">
+            The caller method.
+            </param>
+            <returns>
+            The caller's namespace.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Failure._GetModule(System.Reflection.MethodBase)">
+            <summary>
+            Gets the caller's namespace.
+            </summary>
+            <param name="CurrentMethod">
+            The caller method.
+            </param>
+            <returns>
+            The caller's namespace.
+            </returns>
+        </member>
+        <member name="T:LLXCORE.JSon.Json">
+            <summary>
+            This class contains the default JSon methods to be used on this software.
+            </summary>
+        </member>
+        <member name="T:LLXCORE.MySQL.Adapter">
+            <summary>
+            This class contains the default MySql adapter to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter.ToString">
+            <summary>
+            Gets the current connection string made of the current information.
+            </summary>
+            <returns>
+            The current connection string.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter._ToString">
+            <summary>
+            Gets the current connection string made of the current information.
+            </summary>
+            <returns>
+            The current connection string.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.MySQL.Adapter._Connection">
+            <summary>
+            The MySql.Data.MySqlClient.MySqlConnection object.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.MySQL.Adapter._ConnectionString">
+            <summary>
+            The MySql.Data.MySqlClient.MySqlConnection object's connection string.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter.#ctor(LLXCORE.MySQL.Connection)">
+            <summary>
+            Creates a new MySQL connection adapter to be used on a server-client model.
+            </summary>
+            <param name="Connection">
+            The connection object.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0069 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter.IsAlive">
+            <summary>
+            Checks if the connection is already opened.
+            </summary>
+            <returns>
+            True if the connection is opened. False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter.Attempt">
+            <summary>
+            Attempts to establish a connection to the database server.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0074 - Unnable to establish connection.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter.Execute(LLXCORE.MySQL.Statement)">
+            <summary>
+            Attempts to open a new connection to the database, then executes the statement,
+            then closes the connection, and finally returns the result of the query.
+            </summary>
+            <returns>
+            A LLXCORE.MySQL.Query.Result object containing the result of the query.
+            </returns>
+            <param name="Statement">
+            The statement to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0076 - Unnable to execute statement.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter._ValidateConnection(LLXCORE.MySQL.Connection)">
+            <summary>
+            Checks if a given connection is valid.
+            </summary>
+            <param name="Connection">
+            The connection object.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0070 - Connection is null.
+            <para/>
+            0x0071 - Connection is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter._IsAlive">
+            <summary>
+            Checks if the connection is already opened.
+            </summary>
+            <returns>
+            True if the connection is opened. False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter._Start">
+            <summary>
+            Attempts to start a new connection to the database server.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0072 - Error while opening connection. - Contains Native.
+            <para/>
+            0x0073 - Unhandled MySql error appeared.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter._Stop">
+            <summary>
+            Attempts to close any existing connection.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter._Attempt">
+            <summary>
+            Attempts to establish a connection to the database server.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0075 - Error connecting to the server.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Adapter._Execute(LLXCORE.MySQL.Statement)">
+            <summary>
+            Attempts to open a new connection to the database, then executes the statement,
+            then closes the connection, and finally returns the result of the query.
+            </summary>
+            <returns>
+            A LLXCORE.MySQL.Query.Result object containing the result of the query.
+            </returns>
+            <param name="Statement">
+            The statement to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0075 - Unnable to start connection.
+            <para/>
+            0x0077 - Statement is null.
+            <para/>
+            0x0078 - Statement is invalid.
+            <para/>
+            0x0079 - Command is invalid.
+            <para/>
+            0x0080 - Error while executing statement.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.MySQL.Connection">
+            <summary>
+            This class contains the default MySql connection methods to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.ToString">
+            <summary>
+            Gets the current connection string made of the current information.
+            </summary>
+            <returns>
+            The current connection string.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._ToString">
+            <summary>
+            Gets the current connection string made of the current information.
+            </summary>
+            <returns>
+            The current connection string.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.MySQL.Connection._ServerURL">
+            <summary>
+            The database server's url.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Connection.ServerURL">
+            <summary>
+            Gets or sets the current database server's url.
+            On set, if invalid, nothing will be set.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0025 - Error validating database server's url.
+            </exception>
+        </member>
+        <member name="F:LLXCORE.MySQL.Connection._ServerPort">
+            <summary>
+            The database server's port number.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Connection.ServerPort">
+            <summary>
+            Gets or sets the current database server's port number.
+            On set, if invalid, nothing will be set
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0031 - Error validating database server's port number.
+            </exception>
+        </member>
+        <member name="F:LLXCORE.MySQL.Connection._ServerDataBase">
+            <summary>
+            The database's name.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Connection.ServerDataBase">
+            <summary>
+            Gets or sets the current database's name.
+            On set, if invalid, nothing will be set.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0035 - Error validating database's name.
+            </exception>
+        </member>
+        <member name="F:LLXCORE.MySQL.Connection._ServerUserName">
+            <summary>
+            The database's user name.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Connection.ServerUserName">
+            <summary>
+            Gets or sets the current database's user name.
+            On set, if invalid, nothing will be set.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0041 - Error validating database's user name.
+            </exception>
+        </member>
+        <member name="F:LLXCORE.MySQL.Connection._ServerPassword">
+            <summary>
+            The user name's password.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Connection.ServerPassword">
+            <summary>
+            Gets or sets the current user name's password.
+            On set, if invalid, nothing will be set.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0047 - Error validating user name's password.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.#ctor(System.String,System.Int32,System.String,System.String,System.String)">
+            <summary>
+            Instances a new MySQL's Connection object.
+            </summary>
+            <param name="ServerURL">
+            The server's url.
+            </param>
+            <param name="ServerPort">
+            The server's port number.
+            </param>
+            <param name="ServerDataBase">
+            The database's name.
+            </param>
+            <param name="ServerUserName">
+            The database's user name.
+            </param>
+            <param name="ServerPassword">
+            The user's password.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0053 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.#ctor(System.String,System.Int32,System.String,System.String)">
+            <summary>
+            Instances a new MySQL's Connection object.
+            <para/>
+            NOTE: Calling this method is similar to calling Connection(ServerURL, ServerPort, ServerDataBase, ServerUserName, null).
+            </summary>
+            <param name="ServerURL">
+            The server's url.
+            </param>
+            <param name="ServerPort">
+            The server's port number.
+            </param>
+            <param name="ServerDataBase">
+            The database's name.
+            </param>
+            <param name="ServerUserName">
+            The database's user name.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0053 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.#ctor(System.String,System.Int32,System.String)">
+            <summary>
+            Instances a new MySQL's Connection object.
+            <para/>
+            NOTE: Calling this method is similar to calling Connection(ServerURL, ServerPort, ServerDataBase, null, null).
+            </summary>
+            <param name="ServerURL">
+            The server's url.
+            </param>
+            <param name="ServerPort">
+            The server's port number.
+            </param>
+            <param name="ServerDataBase">
+            The database's name.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0053 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.#ctor(System.String,System.Int32)">
+            <summary>
+            Instances a new MySQL's Connection object.
+            <para/>
+            NOTE: Calling this method is similar to calling Connection(ServerURL, ServerPort, null, null, null).
+            </summary>
+            <param name="ServerURL">
+            The server's url.
+            </param>
+            <param name="ServerPort">
+            The server's port number.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0053 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.#ctor(System.String)">
+            <summary>
+            Instances a new MySQL's Connection object.
+            <para/>
+            NOTE: Calling this method is similar to calling Connection(ServerURL, 3306, null, null, null).
+            </summary>
+            <param name="ServerURL">
+            The server's url.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0053 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.#ctor">
+            <summary>
+            Instances a new MySQL's Connection object.
+            <para/>
+            NOTE: Calling this method is similar to calling Connection("localhost", 3306, null, null, null).
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.ValidateServerURL(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid database server's URL.
+            </summary>
+            <param name="ServerURL">
+            The database server's URL to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0025 - Error validating database server's url.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.ValidateServerPort(System.Int32)">
+            <summary>
+            Checks if a given number is a qualified and valid database server's port.
+            </summary>
+            <param name="ServerPort">
+            The database server's port number to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0031 - Error validating database server's port number.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.ValidateServerDataBase(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid database's name.
+            </summary>
+            <param name="ServerDataBase">
+            The database's name to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0035 - Error validating database's name.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.ValidateServerUserName(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid database's user name.
+            </summary>
+            <param name="ServerUserName">
+            The database's user name to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0041 - Error validating database's user name.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.ValidateServerPassword(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid user name's password.
+            </summary>
+            <param name="ServerPassword">
+            The user name's password to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0047 - Error validating user name's password.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.RemoveServerDataBase">
+            <summary>
+            Sets the current database's name to null.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.RemoveServerUserName">
+            <summary>
+            Sets the current database's user name to null.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection.RemoveServerPassword">
+            <summary>
+            Sets the current user name's password to null.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._ValidateServerURL(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid database server's URL.
+            </summary>
+            <param name="ServerURL">
+            The database server's URL to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0026 - ServerURL is null.
+            <para/>
+            0x0027 - ServerURL is empty.
+            <para/>
+            0x0028 - ServerURL starts with a blank space.
+            <para/>
+            0x0029 - ServerURL ends with a blank space.
+            <para/>
+            0x0030 - ServerURL is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._ValidateServerPort(System.Int32)">
+            <summary>
+            Checks if a given number is a qualified and valid database server's port number.
+            </summary>
+            <param name="ServerPort">
+            The database server's port number to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0032 - ServerPort is less than or equals to 0.
+            <para/>
+            0x0033 - ServerPort is great than or equals to 65536.
+            <para/>
+            0x0034 - ServerPort is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._ValidateServerDataBase(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid database's name.
+            </summary>
+            <param name="ServerDataBase">
+            The database's name to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0036 - ServerDataBase is null.
+            <para/>
+            0x0037 - ServerDataBase is empty.
+            <para/>
+            0x0038 - ServerDataBase starts with a blank space.
+            <para/>
+            0x0039 - ServerDataBase ends with a blank space.
+            <para/>
+            0x0040 - ServerDataBase is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._ValidateServerUserName(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid database's user name.
+            </summary>
+            <param name="ServerUserName">
+            The database's user name to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0042 - ServerUserName is null.
+            <para/>
+            0x0043 - ServerUserName is empty.
+            <para/>
+            0x0044 - ServerUserName starts with a blank space.
+            <para/>
+            0x0045 - ServerUserName ends with a blank space.
+            <para/>
+            0x0046 - ServerUserName is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._ValidateServerPassword(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid user name's password.
+            </summary>
+            <param name="ServerPassword">
+            The user name's password to verify.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0048 - ServerPassword is null.
+            <para/>
+            0x0049 - ServerPassword is empty.
+            <para/>
+            0x0050 - ServerPassword starts with a blank space.
+            <para/>
+            0x0051 - ServerPassword ends with a blank space.
+            <para/>
+            0x0052 - ServerPassword is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._RemoveServerDataBase">
+            <summary>
+            Sets the current database's name to null.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._RemoveServerUserName">
+            <summary>
+            Sets the current database's user name to null.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Connection._RemoveServerPassword">
+            <summary>
+            Sets the current user name's password to null.
+            </summary>
+        </member>
+        <member name="T:LLXCORE.MySQL.Query.Procedure">
+            <summary>
+            This class contains the default MySql stored procedures methods to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure.ToString">
+            <summary>
+            Gets the name of the stored procedure to call.
+            </summary>
+            <returns>
+            The name of the stored procedure to call.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure._ToString">
+            <summary>
+            Gets the name of the stored procedure to call.
+            </summary>
+            <returns>
+            The name of the stored procedure to call.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.MySQL.Query.Procedure._ProcedureName">
+            <summary>
+            The name of the stored procedure to call.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.MySQL.Query.Procedure._Command">
+            <summary>
+            The stored procedure command to create and prepare.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure.#ctor(System.String)">
+            <summary>
+            Instances a new procedure to be called by the LLXCORE.MySQL.Statement class.
+            </summary>
+            <param name="ProcedureName">
+            The name of the stored procedure to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0054 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure.ParametersClear">
+            <summary>
+            Clears the entire list of parameters within this instance.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure.ParametersAdd(System.Object)">
+            <summary>
+            Adds a new parameter to this instance.
+            </summary>
+            <param name="Value">
+            The value of the parameter.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0058 - Unnable to add parameter.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure.Create">
+            <summary>
+            Gets the current command of this instance.
+            </summary>
+            <returns>
+            The current command of this instance.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure._ValidateProcedureName(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid procedure name.
+            </summary>
+            <param name="ProcedureName">
+            The name of the stored procedure to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0055 - ProcedureName is null.
+            <para/>
+            0x0056 - ProcedureName is empty.
+            <para/>
+            0x0057 - ProcedureName is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure._ParametersClear">
+            <summary>
+            Clears the entire list of parameters within this instance.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure._ParametersAdd(System.Object)">
+            <summary>
+            Adds a new parameter to this instance.
+            </summary>
+            <param name="Value">
+            The value of the parameter.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0059 - Error adding parameter.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.Procedure._Create">
+            <summary>
+            Gets the current command of this instance.
+            </summary>
+            <returns>
+            The current command of this instance.
+            </returns>
+        </member>
+        <member name="T:LLXCORE.MySQL.Query.View">
+            <summary>
+            This class contains the default MySql view methods to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.View.ToString">
+            <summary>
+            Gets the name of the view to call.
+            </summary>
+            <returns>
+            The name of the view to call.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.View._ToString">
+            <summary>
+            Gets the name of the view to call.
+            </summary>
+            <returns>
+            The name of the view to call.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.MySQL.Query.View._ViewName">
+            <summary>
+            The name of the view to call.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.MySQL.Query.View._Command">
+            <summary>
+            The view command to create and prepare.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.View.#ctor(System.String)">
+            <summary>
+            Instances a new view to be called by the LLXCORE.MySQL.Statement class.
+            </summary>
+            <param name="ViewName">
+            The name of the view to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0060 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.View.Create">
+            <summary>
+            Gets the current command of this instance.
+            </summary>
+            <returns>
+            The current command of this instance.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.View._ValidateViewName(System.String)">
+            <summary>
+            Checks if a given string is a qualified and valid procedure name.
+            </summary>
+            <param name="ViewName">
+            The name of the stored procedure to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0061 - ViewName is null.
+            <para/>
+            0x0062 - ViewName is empty.
+            <para/>
+            0x0063 - ViewName is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Query.View._Create">
+            <summary>
+            Gets the current command of this instance.
+            </summary>
+            <returns>
+            The current command of this instance.
+            </returns>
+        </member>
+        <member name="T:LLXCORE.MySQL.Result">
+            <summary>
+            This class contains the default MySql resultset handler methods to be used on this software.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.MySQL.Result._Reader">
+            <summary>
+            The MySql.Data.MySqlClient.MySqlDataReader object to handle.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Result.Data">
+            <summary>
+            Gets the resultant gathered data.
+            Null if Reader was closed or no data was found.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.MySQL.Result._Data">
+            <summary>
+            The resultant data.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Result.ColumnNames">
+            <summary>
+            Gets the resultant gathered column names.
+            Null if Reader was closed or no data was found.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.MySQL.Result._ColumnNames">
+            <summary>
+            The resultant column names.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.MySQL.Result.ColumnType">
+            <summary>
+            Gets the resultant gathered column type.
+            Null if Reader was closed or no data was found.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.MySQL.Result._ColumnType">
+            <summary>
+            The resultant column object type.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Result.#ctor(MySql.Data.MySqlClient.MySqlDataReader)">
+            <summary>
+            Creates a new Result object to handle a MySql.Data.MySqlClient.MySqlDataReader object.
+            </summary>
+            <param name="Reader">
+            The MySql.Data.MySqlClient.MySqlDataReader object.
+            </param>
+        </member>
+        <member name="M:LLXCORE.MySQL.Result._Handle">
+            <summary>
+            Handles the resulting data within the MySql.Data.MySqlClient.MySqlDataReader object.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Result.InsertRow">
+            <summary>
+            Inserts a new empty row in the Data object.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Result.AddRecord(System.Object[])">
+            <summary>
+            Inserts a new row of data into the last Data row.
+            </summary>
+            <param name="Record">
+            The row of data to insert.
+            </param>
+        </member>
+        <member name="T:LLXCORE.MySQL.Statement">
+            <summary>
+            This class contains the default MySql statement methods to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement.ToString">
+            <summary>
+            Gets the name of the view or stored procedure that will be called.
+            </summary>
+            <returns>
+            The name of the view or stored procedure that will be called.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement._ToString">
+            <summary>
+            Gets the name of the view or stored procedure that will be called.
+            </summary>
+            <returns>
+            The name of the view or stored procedure that will be called.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.MySQL.Statement._Command">
+            <summary>
+            The command to be executed.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement.#ctor(LLXCORE.MySQL.Query.Procedure)">
+            <summary>
+            Instances a new statement object to be used by a superior class.
+            </summary>
+            <param name="Procedure">
+            The procedure to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0064 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement.#ctor(LLXCORE.MySQL.Query.View)">
+            <summary>
+            Instances a new statement object to be used by a superior class.
+            </summary>
+            <param name="View">
+            The view to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0064 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement.Create">
+            <summary>
+            Gets the current command of this instance.
+            </summary>
+            <returns>
+            The current command of this instance.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement._ValidateProcedure(LLXCORE.MySQL.Query.Procedure)">
+            <summary>
+            Checks if a given procedure is valid.
+            </summary>
+            <param name="Procedure">
+            The procedure to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0065 - Procedure is null.
+            <para/>
+            0x0066 - Procedure is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement._ValidateView(LLXCORE.MySQL.Query.View)">
+            <summary>
+            Checks if a given view is valid.
+            </summary>
+            <param name="View">
+            The view to call.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0067 - View is null.
+            <para/>
+            0x0068 - View is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.MySQL.Statement._Create">
+            <summary>
+            Gets the current command of this instance.
+            </summary>
+            <returns>
+            The current command of this instance.
+            </returns>
+        </member>
+        <member name="T:LLXCORE.Path.Directory">
+            <summary>
+            This class contains the default directory manager to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.ToString">
+            <summary>
+            Get the fully qualified uri of this directory.
+            </summary>
+            <returns>
+            The fully qualified uri of this directory.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._ToString">
+            <summary>
+            Get the fully qualified uri of this directory.
+            </summary>
+            <returns>
+            The fully qualified uri of this directory.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Path.Directory._Uri">
+            <summary>
+            The target uri object.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.#ctor(LLXCORE.Uri.Local)">
+            <summary>
+            Instances a new directory manager that targets the directory of a given uri.
+            </summary>
+            <param name="Uri">
+            The target directory's uri.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0090 - Error validating uri.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.Exist">
+            <summary>
+            Validates the directory to exists in the given path.
+            </summary>
+            <returns>
+            True if directory exists, False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.Files">
+            <summary>
+            Gather the name and extension, if any, of all the files contained in the given uri.
+            </summary>
+            <returns>
+            A string array containing the names and extension of the found files. Null if nothing was found.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0093 - Error gathering files.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.Directories">
+            <summary>
+            Gather the name of all the directories contained in the given uri.
+            </summary>
+            <returns>
+            A string array containing the names of the found directories. Null if nothing was found.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0094 - Error gathering directories.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.IsEmpty">
+            <summary>
+            Checks if the directory contains something.
+            </summary>
+            <returns>
+            True if directory exists and contains something, False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.Create">
+            <summary>
+            Attempts to create the directory on the given uri.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0095 - Unnable to create the directory.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory.Delete(System.Boolean)">
+            <summary>
+            Attempts to delete the directory on the given uri.
+            </summary>
+            <param name="Force">
+            Indicates if each file and subdirectory contained in it must be deleted as well.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0096 - Unnable to delete the directory.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._ValidateUri(LLXCORE.Uri.Local)">
+            <summary>
+            Checks if a given uri targets a, and only a, directory.
+            </summary>
+            <param name="Uri">
+            The target directory's uri.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0091 - Uri targets a file.
+            <para/>
+            0x0092 - Uri doesn't targets a directory.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._Exist">
+            <summary>
+            Validates the existance of this directory.
+            </summary>
+            <returns>
+            True if directory exists, False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._IsEmpty">
+            <summary>
+            Checks if the directory exists, then checks if it contains something.
+            </summary>
+            <returns>
+            True if directory exists and contains something, False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._Files">
+            <summary>
+            Gather the name and extension, if any, of all the files contained in this directory.
+            </summary>
+            <returns>
+            A string array containing the names and extension of the found files. Null if nothing was found.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0097 - Uri error.
+            <para/>
+            0x0098 - Directory not found.
+            <para/>
+            0x0099 - Access denied.
+            <para/>
+            0x0100 - Uri is null.
+            <para/>
+            0x0101 - Uri is invalid.
+            <para/>
+            0x0102 - Uri is too long.
+            <para/>
+            0x0103 - Directory not found.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._Directories">
+            <summary>
+            Gather the name of all the directories contained in this directory.
+            </summary>
+            <returns>
+            A string array containing the names of the found directories. Null if nothing was found.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0097 - Uri error.
+            <para/>
+            0x0098 - Directory not found.
+            <para/>
+            0x0099 - Access denied.
+            <para/>
+            0x0100 - Uri is null.
+            <para/>
+            0x0101 - Uri is invalid.
+            <para/>
+            0x0102 - Uri is too long.
+            <para/>
+            0x0103 - Directory not found.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._Create">
+            <summary>
+            Attempts to create the directory on the given uri.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0097 - Uri error.
+            <para/>
+            0x0099 - Access denied.
+            <para/>
+            0x0100 - Uri is null.
+            <para/>
+            0x0101 - Uri is invalid.
+            <para/>
+            0x0102 - Uri is too long.
+            <para/>
+            0x0103 - Directory not found.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Directory._Delete(System.Boolean)">
+            <summary>
+            Attempts to delete the directory on the given uri.
+            </summary>
+            <param name="Force">
+            Indicates if each file and subdirectory contained in it must be deleted as well.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0097 - Uri error.
+            <para/>
+            0x0099 - Access denied.
+            <para/>
+            0x0100 - Uri is null.
+            <para/>
+            0x0101 - Uri is invalid.
+            <para/>
+            0x0102 - Uri is too long.
+            <para/>
+            0x0103 - Directory not found.
+            <para/>
+            0x0104 - Directory isn't empty.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.Path.File">
+            <summary>
+            This class contains the default directory manager to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.File.ToString">
+            <summary>
+            Get the fully qualified uri of this file.
+            </summary>
+            <returns>
+            The fully qualified uri of this file.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.File._ToString">
+            <summary>
+            Get the fully qualified local uri of this file.
+            </summary>
+            <returns>
+            The fully qualified path of this file.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Path.File._Uri">
+            <summary>
+            The target uri object.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.File.#ctor(LLXCORE.Uri.Local)">
+            <summary>
+            Instances a new file manager that targets the file of a given path.
+            </summary>
+            <param name="Path">
+            The target file's path.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0106 - Path doesn't targets a file.
+            <para/>
+            0x0107 - Directory error.
+            <para/>
+            0x0108 - Directory wasn't found.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.File.Exist">
+            <summary>
+            Validates the file to exist in the given path.
+            </summary>
+            <returns>
+            True if file exists in the given path. False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.File.Delete">
+            <summary>
+            Attempts to delete the file in the given path.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0109 - Unnable to delete file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.File.Create(System.Boolean)">
+            <summary>
+            Attempts to create a new empty file in the given path.
+            </summary>
+            <param name="Force">
+            Indicates if file must be deleted if it already exists in the given path.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0118 - Unnable to create file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.File._Exist">
+            <summary>
+            Validates the file to exist in the given path.
+            </summary>
+            <returns>
+            True if file exists in the given path. False otherwise.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.File._Delete">
+            <summary>
+            Attempts to delete the file in the given path.
+            </summary>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0110 - File name is null.
+            <para/>
+            0x0111 - File name is invalid.
+            <para/>
+            0x0112 - Directory wasn't found.
+            <para/>
+            0x0113 - Path is too long.
+            <para/>
+            0x0114 - File name contains invalid characters.
+            <para/>
+            0x0115 - Access denied.
+            <para/>
+            0x0116 - File is in use.
+            <para/>
+            0x0117 - File name error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.File._Create(System.Boolean)">
+            <summary>
+            Attempts to create a new empty file in the given path.
+            </summary>
+            <param name="Force">
+            Indicates if file must be deleted if it already exists in the given path.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0110 - File name is null.
+            <para/>
+            0x0111 - File name is invalid.
+            <para/>
+            0x0112 - Directory wasn't found.
+            <para/>
+            0x0113 - Path is too long.
+            <para/>
+            0x0114 - File name contains invalid characters.
+            <para/>
+            0x0115 - Access denied.
+            <para/>
+            0x0119 - Unnable to delete file.
+            <para/>
+            0x0120 - File was found.
+            <para/>
+            0x0121 - Unnable to create file.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.Path.Read">
+            <summary>
+            This class contains the default file reader to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Read.ToString">
+            <summary>
+            Get the fully qualified path of the file.
+            </summary>
+            <returns>
+            The fully qualified path of the file.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Read._ToString">
+            <summary>
+            Get the fully qualified path of the file.
+            </summary>
+            <returns>
+            The fully qualified path of the file.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Path.Read._File">
+            <summary>
+            The target file object.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Read.#ctor(LLXCORE.Path.File)">
+            <summary>
+            Instances a new reader object that targets a given file.
+            </summary>
+            <param name="File">
+            The target file to read.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0122 - File wasn't found.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read.ReadBytes">
+            <summary>
+            Opens a binary file, reads all it contents into a byte array, then closes the file.
+            </summary>
+            <returns>
+            The read byte array. Null if file was empty.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0123 - Unnable to read file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read.ReadLines">
+            <summary>
+            Opens a text file, reads all it contents into a string array, then closes the file.
+            <para/>
+            NOTE: Calling this method is similar to calling ReadLines(System.Text.Encoding.UTF8);
+            </summary>
+            <returns>
+            The read string array. Null if file was empty.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0123 - Unnable to read file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read.ReadLines(System.Text.Encoding)">
+            <summary>
+            Opens a text file, reads all it contents into a string array, then closes the file.
+            </summary>
+            <returns>
+            The read string array. Null if file was empty.
+            </returns>
+            <param name="Encoding">
+            The System.Text.Encoding encoding format. Default is UTF8.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0123 - Unnable to read file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read.ReadText">
+            <summary>
+            Opens a text file, reads all it contents into a string, then closes the file.
+            <para/>
+            NOTE: Calling this method is similar to calling ReadText(System.Text.Encoding.UTF8);
+            </summary>
+            <returns>
+            The read string. Null if file was empty.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0123 - Unnable to read file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read.ReadText(System.Text.Encoding)">
+            <summary>
+            Opens a text file, reads all it contents into a string, then closes the file.
+            </summary>
+            <returns>
+            The read string. Null if file was empty.
+            </returns>
+            <param name="Encoding">
+            The System.Text.Encoding encoding format. Default is UTF8.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0123 - Unnable to read file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read._ReadBytes">
+            <summary>
+            Opens a binary file, reads all it contents into a byte array, then closes the file.
+            </summary>
+            <returns>
+            The read byte array. Null if file was empty.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0124 - Path is null.
+            <para/>
+            0x0125 - Path contains invalid characters.
+            <para/>
+            0x0126 - File name is too long.
+            <para/>
+            0x0127 - Directory wasn't found.
+            <para/>
+            0x0128 - File wasn't found.
+            <para/>
+            0x0129 - Unnable to read file.
+            <para/>
+            0x0130 - Path is invalid.
+            <para/>
+            0x0131 - Access denied.
+            <para/>
+            0x0132 - Insufficient permission.
+            <para/>
+            0x0133 - File error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read._ReadLines(System.Text.Encoding)">
+            <summary>
+            Opens a text file, reads all it contents into a string array, then closes the file.
+            </summary>
+            <returns>
+            The read string array. Null if file was empty.
+            </returns>
+            <param name="Encoding">
+            The System.Text.Encoding encoding format. Default is UTF8.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0124 - Path is null.
+            <para/>
+            0x0125 - Path contains invalid characters.
+            <para/>
+            0x0126 - File name is too long.
+            <para/>
+            0x0127 - Directory wasn't found.
+            <para/>
+            0x0128 - File wasn't found.
+            <para/>
+            0x0129 - Unnable to read file.
+            <para/>
+            0x0130 - Path is invalid.
+            <para/>
+            0x0131 - Access denied.
+            <para/>
+            0x0132 - Insufficient permission.
+            <para/>
+            0x0133 - File error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Read._ReadText(System.Text.Encoding)">
+            <summary>
+            Opens a text file, reads all it contents into a string, then closes the file.
+            </summary>
+            <returns>
+            The read string. Null if file was empty.
+            </returns>
+            <param name="Encoding">
+            The System.Text.Encoding encoding format. Default is UTF8.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0124 - Path is null.
+            <para/>
+            0x0125 - Path contains invalid characters.
+            <para/>
+            0x0126 - File name is too long.
+            <para/>
+            0x0127 - Directory wasn't found.
+            <para/>
+            0x0128 - File wasn't found.
+            <para/>
+            0x0129 - Unnable to read file.
+            <para/>
+            0x0130 - Path is invalid.
+            <para/>
+            0x0131 - Access denied.
+            <para/>
+            0x0132 - Insufficient permission.
+            <para/>
+            0x0133 - File error.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.Path.Serializer">
+            <summary>
+            This class contains the default serialization methods to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer.ToString">
+            <summary>
+            Get the fully qualified path of the file.
+            </summary>
+            <returns>
+            The fully qualified path of the file.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer._ToString">
+            <summary>
+            Get the fully qualified path of the file.
+            </summary>
+            <returns>
+            The fully qualified path of the file.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Path.Serializer._File">
+            <summary>
+            The target file object.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Path.Serializer._Directory">
+            <summary>
+            The target directory object.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer.#ctor(LLXCORE.Path.File)">
+            <summary>
+            Instances a new serializer object that targets a given file.
+            </summary>
+            <param name="File">
+            The target file to (de)serialize.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0157 - Invalid file.
+            <para/>
+            0x0160 - Invalid extension.
+            <para/>
+            0x0161 - Invalid uri.
+            <para/>
+            0x0162 - Invalid directory.
+            <para/>
+            0x0164 - Directory error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer.Serialize(LLXCORE.DataPool.Data)">
+            <summary>
+            Attempts to serialize a DataPool.Data object into a target file.
+            </summary>
+            <param name="Data">
+            The DataPool.Data object to serialize.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0165 - Unnable to serialize file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer.DeSerialize">
+            <summary>
+            Attempts to deserialize the target file into a DataPool.Data object.
+            </summary>
+            <returns>
+            The DataPool.Data object.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0166 - Unnable to deserialize file.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer._Stream(System.IO.FileMode)">
+            <summary>
+            Opens or creates a file and return its System.IO.Stream in order to (de)serialize it.
+            </summary>
+            <returns>
+            The System.IO.Stream object of the file.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0167 - Path is null.
+            <para/>
+            0x0168 - Argument is out of range.
+            <para/>
+            0x0169 - Path contains invalid characters.
+            <para/>
+            0x0170 - File name is too long.
+            <para/>
+            0x0171 - Directory wasn't found.
+            <para/>
+            0x0172 - File wasn't found.
+            <para/>
+            0x0173 - Unnable to read file.
+            <para/>
+            0x0174 - Path is invalid.
+            <para/>
+            0x0175 - Access denied.
+            <para/>
+            0x0176 - File error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer._Serialize(LLXCORE.DataPool.Data)">
+            <summary>
+            Attempts to serialize a DataPool.Data object into a target file.
+            </summary>
+            <param name="Data">
+            The DataPool.Data object to serialize.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0177 - Data is null.
+            <para/>
+            0x0178 - Unnable to stream file.
+            <para/>
+            0x0179 - The file is invalid.
+            <para/>
+            0x0180 - Insufficient permission.
+            <para/>
+            0x0181 - Fail to serialize.
+            <para/>
+            0x0182 - Unnable to serialize.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Serializer._DeSerialize">
+            <summary>
+            Attempts to deserialize the target file into a DataPool.Data object.
+            </summary>
+            <returns>
+            The DataPool.Data object.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0178 - Unnable to stream file.
+            <para/>
+            0x0183 - The file is invalid.
+            <para/>
+            0x0184 - Fail to deserialize.
+            <para/>
+            0x0185 - Insufficient permission.
+            <para/>
+            0x0186 - Unnable to deserialize.
+            <para/>
+            0x0187 - Unnable to cast file.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.Path.Write">
+            <summary>
+            This class contains the default file writer to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Write.ToString">
+            <summary>
+            Get the fully qualified uri of the file.
+            </summary>
+            <returns>
+            The fully qualified uri of the file.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Path.Write._ToString">
+            <summary>
+            Get the fully qualified uri of the file.
+            </summary>
+            <returns>
+            The fully qualified uri of the file.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Path.Write._File">
+            <summary>
+            The target file object.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Path.Write._Directory">
+            <summary>
+            The target directory object.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Path.Write.#ctor(LLXCORE.Path.File)">
+            <summary>
+            Instances a new writer object that targets a given file.
+            </summary>
+            <param name="File">
+            The target file to write.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0134 - Invalid file.
+            <para/>
+            0x0135 - Invalid uri.
+            <para/>
+            0x0136 - Invalid directory.
+            <para/>
+            0x0138 - Directory error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.AppendText(System.String)">
+            <summary>
+            Attempts to create a new file if it doesn't exist, then open it and write the given content in the file,
+            then close the file.
+            <para/>
+            NOTE: Calling this method is similar to calling AppendText(string Contents, System.Text.Encoding.UTF8, false);
+            </summary>
+            <param name="Contents">
+            The string to write to the file.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0139 - Unnable to append text.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.AppendText(System.String,System.Text.Encoding)">
+            <summary>
+            Attempts to create a new file if it doesn't exist, then open it and write the given content in the file
+            using the given encoding format, then close the file.
+            <para/>
+            NOTE: Calling this method is similar to calling AppendText(string Contents, System.Text.Encoding Encoding, false);
+            </summary>
+            <param name="Contents">
+            The string to write to the file.
+            </param>
+            <param name="Encoding">
+            The System.Text.Encoding encoding format. Default is UTF8.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0139 - Unnable to append text.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.AppendText(System.String,System.Boolean)">
+            <summary>
+            Attempts to create new or overwrite a file, then open it and write the given content in the file,
+            then close the file.
+            <para/>
+            NOTE: Calling this method is similar to calling AppendText(string Contents, System.Text.Encoding.UTF8, bool Overwrite);
+            </summary>
+            <param name="Contents">
+            The string to write to the file.
+            </param>
+            <param name="Overwrite">
+            Indicates if file must be overwriten if it exists.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0139 - Unnable to append text.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.AppendText(System.String,System.Text.Encoding,System.Boolean)">
+            <summary>
+            Attempts to create new or overwrite a file, then open it and write the given content in the file using
+            the given encoding format, then close the file.
+            </summary>
+            <param name="Contents">
+            The string to write to the file.
+            </param>
+            <param name="Encoding">
+            The System.Text.Encoding encoding format. Default is UTF8.
+            </param>
+            <param name="Overwrite">
+            Indicates if file must be overwriten if it exists.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0139 - Unnable to append text.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.WriteBytes(System.Byte[])">
+            <summary>
+            Creates a new file, and writes the byte array in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            </summary>
+            <param name="Bytes">
+            The bytes to write.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0150 - Unnable to write bytes.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.WriteLines(System.String[])">
+            <summary>
+            Creates a new file, and writes a string array in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            <para/>
+            NOTE: Calling this method is similar to calling WriteLines(stirng[] Contents, System.Text.Encoding.UTF8).
+            </summary>
+            <param name="Contents">
+            The content to write.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0151 - Unnable to write lines.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.WriteLines(System.String[],System.Text.Encoding)">
+            <summary>
+            Creates a new file, and writes a string array in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            </summary>
+            <param name="Contents">
+            The content to write.
+            </param>
+            <param name="Encoding">
+            The encoding format.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0151 - Unnable to write lines.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.WriteText(System.String)">
+            <summary>
+            Creates a new file, and writes a string in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            <para/>
+            NOTE: Calling this method is similar to calling WriteText(stirng Contents, System.Text.Encoding.UTF8).
+            </summary>
+            <param name="Contents">
+            The content to write.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0152 - Unnable to write text.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write.WriteText(System.String,System.Text.Encoding)">
+            <summary>
+            Creates a new file, and writes a string in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            </summary>
+            <param name="Contents">
+            The content to write.
+            </param>
+            <param name="Encoding">
+            The encoding format.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0152 - Unnable to write text.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write._AppendText(System.String,System.Text.Encoding,System.Boolean)">
+            <summary>
+            Attempts to create new or overwrite a file, then open it and write the given content in the file using
+            the given encoding format, then close the file.
+            </summary>
+            <param name="Contents">
+            The string to write to the file.
+            </param>
+            <param name="Encoding">
+            The System.Text.Encoding encoding format. Default is UTF8.
+            </param>
+            <param name="Overwrite">
+            Indicates if file must be overwriten if it exists.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0140 - Unnable to overwrite file.
+            <para/>
+            0x0141 - Path is null.
+            <para/>
+            0x0142 - Path contains invalid characters.
+            <para/>
+            0x0143 - File name is too long.
+            <para/>
+            0x0144 - Directory wasn't found.
+            <para/>
+            0x0145 - Unnable to read file.
+            <para/>
+            0x0146 - Path is invalid.
+            <para/>
+            0x0147 - Access denied.
+            <para/>
+            0x0148 - Insufficient permission.
+            <para/>
+            0x0149 - File error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write._WriteBytes(System.Byte[])">
+            <summary>
+            Creates a new file, and writes the byte array in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            </summary>
+            <param name="Bytes">
+            The bytes to write.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0141 - Path is null.
+            <para/>
+            0x0142 - Path contains invalid characters.
+            <para/>
+            0x0143 - File name is too long.
+            <para/>
+            0x0144 - Directory wasn't found.
+            <para/>
+            0x0145 - Unnable to read file.
+            <para/>
+            0x0146 - Path is invalid.
+            <para/>
+            0x0147 - Access denied.
+            <para/>
+            0x0148 - Insufficient permission.
+            <para/>
+            0x0149 - File error.
+            <para/>
+            0x0153 - Bytes is null.
+            <para/>
+            0x0154 - Bytes is empty.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write._WriteLines(System.String[],System.Text.Encoding)">
+            <summary>
+            Creates a new file, and writes a string array in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            </summary>
+            <param name="Contents">
+            The content to write.
+            </param>
+            <param name="Encoding">
+            The encoding format.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0141 - Path is null.
+            <para/>
+            0x0142 - Path contains invalid characters.
+            <para/>
+            0x0143 - File name is too long.
+            <para/>
+            0x0144 - Directory wasn't found.
+            <para/>
+            0x0145 - Unnable to read file.
+            <para/>
+            0x0146 - Path is invalid.
+            <para/>
+            0x0147 - Access denied.
+            <para/>
+            0x0148 - Insufficient permission.
+            <para/>
+            0x0149 - File error.
+            <para/>
+            0x0155 - Contents is null.
+            <para/>
+            0x0156 - Contents is empty.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Path.Write._WriteText(System.String,System.Text.Encoding)">
+            <summary>
+            Creates a new file, and writes a string in it, then closes the file.
+            <para/>
+            NOTE: If target file already exists, it will be overwritten.
+            </summary>
+            <param name="Contents">
+            The content to write.
+            </param>
+            <param name="Encoding">
+            The encoding format.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0141 - Path is null.
+            <para/>
+            0x0142 - Path contains invalid characters.
+            <para/>
+            0x0143 - File name is too long.
+            <para/>
+            0x0144 - Directory wasn't found.
+            <para/>
+            0x0145 - Unnable to read file.
+            <para/>
+            0x0146 - Path is invalid.
+            <para/>
+            0x0147 - Access denied.
+            <para/>
+            0x0148 - Insufficient permission.
+            <para/>
+            0x0149 - File error.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.Uri.Local">
+            <summary>
+            This class contains the default local uri (files and directories) object to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Uri.Local.ToString">
+            <summary>
+            Get the original string provided to this class.
+            </summary>
+            <returns>
+            The original string provided to this class.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Uri.Local._ToString">
+            <summary>
+            Get the original string provided to this class.
+            </summary>
+            <returns>
+            The original string provided to this class.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Uri.Local._Original">
+            <summary>
+            Original string provided by the user.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Local.Original">
+            <summary>
+            Gets the original string provided by the user.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Local._FullUri">
+            <summary>
+            The fully qualified local uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Local.FullUri">
+            <summary>
+            Gets the fully qualified local uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Local._VolumeDrive">
+            <summary>
+            The volume of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Local.VolumeDrive">
+            <summary>
+            Gets the volume drive of this uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Local._Directory">
+            <summary>
+            The directory of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Local.Directory">
+            <summary>
+            Gets the directory of this uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Local._FileName">
+            <summary>
+            The file name of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Local.FileName">
+            <summary>
+            Get the file name of this uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Local._Extension">
+            <summary>
+            The file extension of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Local.Extension">
+            <summary>
+            Gets the file extension of this uri.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Uri.Local.#ctor(System.String)">
+            <summary>
+            Instances a new local uri object and handles a path name to become a fully qualified uri.
+            <para/>
+            Refeer to this class metadata example for further information.
+            <para/>
+            NOTE: This object will not check existance, create, delete, read or write to/from any file/directory.
+            </summary>
+            <param name="PathName">
+            The path to handle.
+            </param>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0081 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Local._GetAbsolute">
+            <summary>
+            Get the absolute and fully qualified local uri of the original path name.
+            </summary>
+            <returns>
+            The absolute and fully qualified local uri.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0082 - PathName is null.
+            <para/>
+            0x0083 - PathName is invalid.
+            <para/>
+            0x0084 - PathName contains invalid characters.
+            <para/>
+            0x0085 - PathName is too long.
+            <para/>
+            0x0086 - Insufficient permission.
+            <para/>
+            0x0087 - PathName error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Local._GetRoot">
+            <summary>
+            Get the volume drive of this uri.
+            </summary>
+            <returns>
+            The volume drive of this uri.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0083 - PathName is invalid.
+            <para/>
+            0x0087 - PathName error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Local._GetDirectory">
+            <summary>
+            Get the directory of this uri.
+            </summary>
+            <returns>
+            The directory of this uri.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0083 - PathName is invalid.
+            <para/>
+            0x0085 - PathName is too long.
+            <para/>
+            0x0087 - PathName error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Local._GetFileName">
+            <summary>
+            Get the file name of this uri.
+            </summary>
+            <returns>
+            The file name of this uri.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0083 - PathName is invalid.
+            <para/>
+            0x0087 - PathName error.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Local._GetExtension">
+            <summary>
+            Get the extension of this uri.
+            </summary>
+            <returns>
+            The extension of this uri.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0083 - PathName is invalid.
+            <para/>
+            0x0087 - PathName error.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.Uri.Network">
+            <summary>
+            This class contains the default network uri object to be used on this software.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Uri.Network.ToString">
+            <summary>
+            Get the fully qualified network uri.
+            </summary>
+            <returns>
+            The fully qualified network uri.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Uri.Network._ToString">
+            <summary>
+            Get the fully qualified network uri.
+            </summary>
+            <returns>
+            The fully qualified network uri.
+            </returns>
+        </member>
+        <member name="F:LLXCORE.Uri.Network._FullUri">
+            <summary>
+            The fully qualified network uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Network.FullUri">
+            <summary>
+            Gets the fully qualified network uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Network._Protocol">
+            <summary>
+            The protocol of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Network.Protocol">
+            <summary>
+            Gets the protocol of this uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Network._Host">
+            <summary>
+            The host of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Network.Host">
+            <summary>
+            Gets the host of this uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Network._Port">
+            <summary>
+            The port of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Network.Port">
+            <summary>
+            Get the port of this uri.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Network._Resource">
+            <summary>
+            The resource of this uri.
+            </summary>
+        </member>
+        <member name="P:LLXCORE.Uri.Network.Resource">
+            <summary>
+            Gets the resource of this uri.
+            </summary>
+        </member>
+        <member name="M:LLXCORE.Uri.Network.#ctor(System.String)">
+            <summary>
+            Instances a new network uri object and handles a URL to become a fully qualified network uri.
+            <para/>
+            Refeer to this class metadata example for further information.
+            </summary>
+            <param name="URL">
+            The target URL.
+            </param>
+            <example>
+            URL must be provided in the following format:
+            {LLXCORE.Uri.Protocol}://{Host}:{Port}/{Resource}
+            <para/>
+            For example:
+            http://www.google.com:80/maps
+            <para/>
+            If not specified, or an error occurs:
+            LLXCORE.Uri.Protocol will be set as "http",
+            Host will be set as "localhost",
+            Port wil be set as "80",
+            Resource will be set as null.
+            </example>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0088 - Unnable to instance class.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Network._GetProtocol(System.String,System.String@)">
+            <summary>
+            Gets the protocol of the URL.
+            </summary>
+            <param name="URL">
+            The target URL.
+            </param>
+            <param name="newURL">
+            The returnable new URL for the consecuent method.
+            </param>
+            <returns>
+            The LLXCORE.Uri.Protocol protocol.
+            </returns>
+        </member>
+        <member name="M:LLXCORE.Uri.Network._GetHost(System.String,System.String@)">
+            <summary>
+            Gets the host of the URL.
+            </summary>
+            <param name="URL">
+            The target URL.
+            </param>
+            <param name="newURL">
+            The returnable new URL for the consecuent method.
+            </param>
+            <returns>
+            The host.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0089 - URL is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Network._GetPort(System.String,System.String@)">
+            <summary>
+            Gets the port number of the URL.
+            </summary>
+            <param name="URL">
+            The target URL.
+            </param>
+            <param name="newURL">
+            The returnable new URL for the consecuent method.
+            </param>
+            <returns>
+            The port number.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0089 - URL is invalid.
+            </exception>
+        </member>
+        <member name="M:LLXCORE.Uri.Network._GetResource(System.String)">
+            <summary>
+            Gets the resource of the URL.
+            </summary>
+            <param name="URL">
+            The target URL.
+            </param>
+            <param name="newURL">
+            The returnable new URL for the consecuent method.
+            </param>
+            <returns>
+            The resource.
+            </returns>
+            <exception cref="T:LLXCORE.Failure">
+            May throw the following error codes:
+            <para/>
+            0x0089 - URL is invalid.
+            </exception>
+        </member>
+        <member name="T:LLXCORE.Uri.Protocol">
+            <summary>
+            This class contains the default transmission control protocols to be used on this software.
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Protocol.http">
+            <summary>
+            Sets the scheme to http://
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Protocol.https">
+            <summary>
+            Sets the scheme to https://
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Protocol.ftp">
+            <summary>
+            Sets the scheme to ftp://
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Protocol.mailto">
+            <summary>
+            Sets the scheme to mailto://
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Protocol.ldap">
+            <summary>
+            Sets the scheme to ldap://
+            </summary>
+        </member>
+        <member name="F:LLXCORE.Uri.Protocol.file">
+            <summary>
+            Sets the scheme to file://
+            </summary>
+        </member>
+    </members>
+</doc>
